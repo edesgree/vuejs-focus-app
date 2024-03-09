@@ -1,4 +1,4 @@
-export async function getAmbiances() {
+export async function fetchAmbiances() {
     try {
         const response = await fetch('/api/ambiances');
         const ambiances = await response.json();
@@ -11,7 +11,7 @@ export async function getAmbiances() {
     }
 }
 
-export async function getAudios() {
+export async function fetchAudios() {
     try {
         const response = await fetch('/api/audios');
         const audios = await response.json();
