@@ -4,8 +4,8 @@ import { ref } from 'vue'; // Import ref for reactive variables
 export const useSoundscapeStore = defineStore('ambiances', () => {
     // State
     const ambiances = ref([]);
-    const test = ref("hello world");
-    const audios = ref([]);
+
+    const selectedAmbianceAudios = ref(["hello"]);
     const error = ref(null);
     const loading = ref(false);
     const selectedAmbiance = ref(null);
@@ -28,7 +28,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         loading.value = true;
         try {
             const data = await fetchAudios();
-            audios.value = data;
+            selectedAmbianceAudios.value = data;
             return data;
         }
         catch (err) {
@@ -38,50 +38,54 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
             loading.value = false;
         }
     };
+
     const getError = () => error.value;
     const getLoading = () => loading.value;
     const getSelectedAmbiance = () => selectedAmbiance.value;
     const getCurrentPlayingAmbiance = () => currentPlayingAmbiance.value;
 
     // Actions
-    /*
-    const loadAmbiances = async () => {
-        loading.value = true;
-        try {
-            const data = await getAmbiances(); // Implement or import getAmbiances function
-            ambiances.value = data;
-        } catch (err) {
-            error.value = err;
-        } finally {
-            loading.value = false;
-        }
-    };
 
-    const loadAudios = async () => {
-        loading.value = true;
-        try {
-            const data = await getAudios(); // Implement or import getAudios function
-            audios.value = data;
-        } catch (err) {
-            error.value = err;
-        } finally {
-            loading.value = false;
-        }
-    };
-*/
     const setSelectedAmbiance = (ambianceId) => {
         selectedAmbiance.value = ambianceId;
+        console.log('selected ambiance : ', ambianceId);
+        setSelectedAmbianceAudios(getAudiosFiltered(ambianceId));
+        console.log('selectedAmbianceAudios', selectedAmbianceAudios.value);
+    };
+
+    const setSelectedAmbianceAudios = (audios) => {
+        selectedAmbianceAudios.value = audios;
     };
 
     const setCurrentPlayingAmbiance = (ambianceId) => {
         currentPlayingAmbiance.value = ambianceId;
     };
-
+    const getAudiosFiltered = async (ambianceId) => {
+        // get arrays of audios corresponding to the ambiance id
+        const audiosId = ambiances.value.find((ambiance) => ambiance.id === ambianceId).audiosId;
+        loading.value = true;
+        if (!audiosId) {
+            return []; // Handle undefined audiosId
+        }
+        try {
+            const data = await fetchAudios();
+            //filter the complete audio list to get only the audios corresponding to the audiosId list
+            const dataFiltered = data.filter((audio) => audiosId.includes(audio.id));
+            selectedAmbianceAudios.value = dataFiltered;
+            return dataFiltered;
+        }
+        catch (err) {
+            error.value = err;
+        }
+        finally {
+            loading.value = false;
+        }
+    };
     // Return all variables and functions as needed
     return {
-        test,
+
         ambiances,
-        audios,
+        selectedAmbianceAudios,
         error,
         loading,
         selectedAmbiance,
@@ -92,7 +96,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         getLoading,
         getSelectedAmbiance,
         getCurrentPlayingAmbiance,
-
+        getAudiosFiltered,
         setSelectedAmbiance,
         setCurrentPlayingAmbiance
     };

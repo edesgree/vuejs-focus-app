@@ -1,6 +1,7 @@
 <script setup>
 import { computed } from 'vue';
 import { useSoundscapeStore } from "../stores";
+import Ambiance from './Ambiance.vue';
 const store = useSoundscapeStore();
 // load ambiances
 store.getAmbiances();
@@ -8,16 +9,21 @@ store.getAmbiances();
 const filteredAmbiances = computed(() => {
   if (store.selectedAmbiance) {
     return store.ambiances.filter((ambiance) => ambiance.id === store.selectedAmbiance);
+  }else{
+    return [];
   }
-  return [];
 });
+const handleSelection = (ambiance) => {
+    store.setSelectedAmbiance(ambiance.id)
+    console.log('ambiance.id selected is : ',ambiance.id)
+}
 </script>
 <template>
     <div className="ambiances">
         <h2>Ambiances</h2>
-        {{store.test}}
+   
         <nav class="ambiancesList">
-            <div v-for="ambiance in store.ambiances" :key="ambiance.id" @click="store.setSelectedAmbiance(ambiance.id)">
+            <div v-for="ambiance in store.ambiances" :key="ambiance.id" @click="handleSelection(ambiance)">
                 <button :class="store.getSelectedAmbiance() === ambiance.id ? 'selected' : null">
                     {{ambiance.emoji}}
                 </button>
@@ -29,7 +35,8 @@ const filteredAmbiances = computed(() => {
     
         <div v-if="filteredAmbiances">
             <div v-for="ambiance in filteredAmbiances" :key="ambiance.id">
-                name :{{ambiance.name}}
+                Header:{{ ambiance.name }}
+                <Ambiance :name="ambiance.name"/>
             </div>
         </div>
     </div>
