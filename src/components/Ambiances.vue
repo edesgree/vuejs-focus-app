@@ -1,10 +1,16 @@
 <script setup>
+import { computed } from 'vue';
 import { useSoundscapeStore } from "../stores";
-
 const store = useSoundscapeStore();
 // load ambiances
 store.getAmbiances();
-
+// Define computed property to filter ambiances based on selectedAmbiance
+const filteredAmbiances = computed(() => {
+  if (store.selectedAmbiance) {
+    return store.ambiances.filter((ambiance) => ambiance.id === store.selectedAmbiance);
+  }
+  return [];
+});
 </script>
 <template>
     <div className="ambiances">
@@ -21,11 +27,11 @@ store.getAmbiances();
         
          <h1 v-if="store.error" aria-live="assertive">There was an error: {{store.error.message}}</h1>
     
-        <ul v-if="store.ambiances">
-            <li v-for="ambiance in store.ambiances" :key="ambiance.id">
+        <div v-if="filteredAmbiances">
+            <div v-for="ambiance in filteredAmbiances" :key="ambiance.id">
                 name :{{ambiance.name}}
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 </template>
 <style scoped lang="scss">
