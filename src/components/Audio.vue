@@ -44,16 +44,12 @@ const togglePlay = () => {
 <template>
     
     <div>
-{{ icon }}
 
         <PlayPauseButton 
         :handleClickAction="togglePlay"
         :initialDisabled="!isPlaying"
         :emoji="icon"
         :title="name" />
-        
-        !!
-        <button @click="togglePlay">{{ isPlaying ? 'Pause' : 'Play' }}</button>
 
         <div  class="slider">
             <input
@@ -80,6 +76,9 @@ const togglePlay = () => {
 @import "@/assets/scss/_variables.scss";
 @import "@/assets/scss/_colors.scss";
 
+audio{
+    display: none;
+}
 .slider {
   margin: .25rem auto;
 }

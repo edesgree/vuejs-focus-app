@@ -2,6 +2,7 @@
 import { getInputRangeBackgroundSize } from '@/utils/utils';
 import { computed, ref } from 'vue';
 import { useSoundscapeStore } from '../stores';
+import PlayPauseButton from './ui/PlayPauseButton.vue';
 import Audio from './Audio.vue';
     defineProps({
     name: String,
@@ -34,19 +35,15 @@ const sliderVolumeMaxRange = 1;
     console.log('store.selectedAmbianceAudios',store.selectedAmbianceAudios)
 </script>
 <template>
-Ambiance ; 
-    {{ name }}
-
     <div class="ambiance">
             <header>
                 <h2 class="title">{{name}} <span>{{icon}}</span></h2>
                 <div class="controls">
-                    <!--
+                    
                     <PlayPauseButton 
-                    :onClickAction="togglePlayPause"
+                    :handleClickAction="togglePlayPause"
                     :initialDisabled="isAmbiancePlaying"
                     :title="name" />
-                    -->
                     <input
                         type="range"
                         min="0"
@@ -70,7 +67,6 @@ Ambiance ;
                     :isAmbiancePlaying="isAmbiancePlaying"
                     :ambianceVolume="AmbianceVolume"
                     />
-                {audioElements}
               
             </div>
         </div>

@@ -14,8 +14,7 @@ const {isActive, handleClick} = usePlayPauseButton(false, props.handleClickActio
 
 
 </script>
-<template>007
-    {{ title }}
+<template>
     <button
         :class="['button-toggle', 'button-play-pause', { 'fade':  !isActive }]"
         :title="isActive ? 'turn off ' + title: 'turn on '+ title"

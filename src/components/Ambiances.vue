@@ -35,7 +35,7 @@ const handleSelection = (ambiance) => {
     
         <div v-if="filteredAmbiances">
             <div v-for="ambiance in filteredAmbiances" :key="ambiance.id">
-                Header:{{ ambiance.name }}
+              
                 <Ambiance :name="ambiance.name"/>
             </div>
         </div>
