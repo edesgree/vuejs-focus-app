@@ -5,7 +5,7 @@ const store = useSoundscapeStore();
 // load ambiances
 store.getAmbiances();
 
-
+// set current ambiance
 const handleSelection = (ambiance) => {
     store.setCurrentAmbiance(ambiance.id)
 }

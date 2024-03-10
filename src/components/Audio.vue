@@ -6,10 +6,10 @@ import PlayPauseButton from './ui/PlayPauseButton.vue';
 // Define props
 const props = defineProps({
     ambianceVolume:Number,
-isPlaying:Boolean,
-  icon:String,
-  name:String,
-  file:String
+    isPlaying:Boolean,
+    icon:String,
+    name:String,
+    file:String
 });
 const store = useSoundscapeStore()
 const volume = ref(0.5);
@@ -38,9 +38,8 @@ const togglePlay = () => {
     }
     
     isPlaying.value = !isPlaying.value
-    
 };
-console.log('11',store.currentAmbiance.isPlaying)
+
 // Watch for changes in currentAmbiance.value.isPlaying and update isPlaying ref
 watch(() => store.currentAmbiance?.isPlaying, (newValue) => {
     isPlaying.value = newValue;
@@ -63,7 +62,6 @@ watch(() => props.ambianceVolume, (newValue) => {
     }
 });
 onMounted(()=>{
-    console.log('audiomounted')
     if(isPlaying.value){
         const audioElement = audioRef.value;
         if(audioElement){
@@ -78,7 +76,6 @@ onMounted(()=>{
 
         <PlayPauseButton 
         :handleClickAction="togglePlay"
-        :initialDisabled="!store.currentAmbiance.isPlaying"
         :isContextActive="isPlaying"
         :emoji="icon"
         :title="name" />
@@ -105,8 +102,6 @@ onMounted(()=>{
 </template>
 
 <style scoped lang="scss">
-@import "@/assets/scss/_variables.scss";
-@import "@/assets/scss/_colors.scss";
 
 audio{
     display: none;
@@ -119,6 +114,4 @@ audio{
 .slider {
   margin: .25rem auto;
 }
-
-
 </style>

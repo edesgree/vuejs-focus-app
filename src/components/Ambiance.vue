@@ -8,34 +8,25 @@ import PlayPauseButton from './ui/PlayPauseButton.vue';
         ambiance: Object
     })
     const store = useSoundscapeStore()
-    console.log('ambiance', store.currentAmbiance.id);
     const ambianceVolume = ref(0.5);
     const sliderVolumeMaxRange = 1;
 
     const togglePlayPause = () => {
         store.setCurrentAmbianceIsPlaying(!store.currentAmbiance.isPlaying);
-        console.log('togglePlayPause',store.currentAmbiance)
     };
     const handleAmbianceVolumeChange = (e) => {
         ambianceVolume.value = e.target.value;
     };
 
-// trigger play at mount
-
+// trigger play at ambiance change
 watch(() => store.currentAmbiance, (newVal) => {
     console.log('current ambiance changed:', newVal);
     if (newVal ) {
         togglePlayPause();
-        console.log('hello watch')
     }
 }, { immediate: true });
 
-/*
-    onMounted(()=>{
-        console.log('coucou',store.currentAmbianceAudios)
-        togglePlayPause();
-    });
-*/
+
 </script>
 <template>
     <div class="ambiance">

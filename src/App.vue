@@ -1,6 +1,4 @@
 <script setup>
-//import HelloWorld from './components/HelloWorld.vue'
-//import TheWelcome from './components/TheWelcome.vue'
 import Ambiances from './components/Ambiances.vue';
 </script>
 
@@ -17,6 +15,7 @@ import Ambiances from './components/Ambiances.vue';
 <style scoped>
 header {
   line-height: 1.5;
+  text-align:center;
 }
 
 .logo {

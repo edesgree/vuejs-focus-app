@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps } from 'vue';
 import usePlayPauseButton from '../../composables/usePlayPauseButton';
 // Define props
 const props = defineProps({
@@ -9,7 +9,6 @@ const props = defineProps({
     isContextActive:Boolean
 });
 
-const initialDisabled = ref(false);
 const {isActive, handleClick} = usePlayPauseButton(props.isContextActive, props.handleClickAction);
 
 
