@@ -1,5 +1,4 @@
 <script setup>
-import { computed } from 'vue';
 import { useSoundscapeStore } from "../stores";
 import Ambiance from './Ambiance.vue';
 const store = useSoundscapeStore();
@@ -8,16 +7,11 @@ store.getAmbiances();
 
 
 const handleSelection = (ambiance) => {
-    console.log('handleSelection : ',ambiance)
     store.setCurrentAmbiance(ambiance.id)
-    console.log('ambiance.id selected is : ',ambiance.id)
-    console.log('current store ambiance obj',store.currentAmbiance.value)
-    console.log('store.ambiances',store.ambiances)
 }
 </script>
 <template>
     <div className="ambiances">
-        <h2>Ambiances</h2>
    
         <nav :class="['ambiancesList',{opened : store.currentAmbiance}]">
             <div v-for="ambiance in store.ambiances" :key="ambiance.id" @click="handleSelection(ambiance)">
@@ -25,14 +19,11 @@ const handleSelection = (ambiance) => {
                     {{ambiance.emoji}}
                 </button>
             </div>
+            <span v-if="store.loading" class="loading loading-spinner text-primary">...loading</span>
+            <span v-if="store.error" aria-live="assertive">There was an error: {{store.error.message}}</span>
         </nav>
-        <span v-if="store.loading" class="loading loading-spinner text-primary">...loading</span>
         
-         <h1 v-if="store.error" aria-live="assertive">There was an error: {{store.error.message}}</h1>
-        
-         
-            <Ambiance v-if="store.currentAmbiance" :ambiance="store.currentAmbiance"/>
-        
+         <Ambiance v-if="store.currentAmbiance" :ambiance="store.currentAmbiance"/>
     </div>
 </template>
 <style scoped lang="scss">
@@ -42,7 +33,6 @@ nav.ambiancesList {
   display: grid;
   gap: 1rem;
   grid-template-columns: repeat(3, 1fr);
-
   padding: 1rem;
 
   &.opened {
@@ -56,7 +46,7 @@ nav.ambiancesList {
 }
 
 .ambiances {
-  margin: 0 auto;
+  margin: 0 auto 3rem auto;
   max-width: 350px;
 }
 </style>

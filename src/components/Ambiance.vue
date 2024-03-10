@@ -1,9 +1,9 @@
 <script setup>
 import { getInputRangeBackgroundSize } from '@/utils/utils';
-import { computed, ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useSoundscapeStore } from '../stores';
-import PlayPauseButton from './ui/PlayPauseButton.vue';
 import Audio from './Audio.vue';
+import PlayPauseButton from './ui/PlayPauseButton.vue';
     defineProps({
         ambiance: Object
     })
@@ -14,51 +14,63 @@ import Audio from './Audio.vue';
 
     const togglePlayPause = () => {
         store.setCurrentAmbianceIsPlaying(!store.currentAmbiance.isPlaying);
-        console.log(store.currentAmbiance)
+        console.log('togglePlayPause',store.currentAmbiance)
     };
     const handleAmbianceVolumeChange = (e) => {
         ambianceVolume.value = e.target.value;
-        console.log('ambiance volume', ambianceVolume);
     };
 
-    
- 
-    console.log('store.currentAmbianceAudios',store.currentAmbianceAudios.value)
+// trigger play at mount
+
+watch(() => store.currentAmbiance, (newVal) => {
+    console.log('current ambiance changed:', newVal);
+    if (newVal ) {
+        togglePlayPause();
+        console.log('hello watch')
+    }
+}, { immediate: true });
+
+/*
+    onMounted(()=>{
+        console.log('coucou',store.currentAmbianceAudios)
+        togglePlayPause();
+    });
+*/
 </script>
 <template>
     <div class="ambiance">
-            <header>
-                <h2 class="title">{{ambiance.name}} <span>{{ambiance.emoji}}</span></h2>
-                <div class="controls">
-                    
-                    <PlayPauseButton 
-                    :handleClickAction="togglePlayPause"
-                    :initialDisabled="!store.currentAmbiance.isPlaying"
-                    :title="name" />
-                    <input
-                        type="range"
-                        min="0"
-                        :max="sliderVolumeMaxRange"
-                        step="0.01"
-                        :value="ambianceVolume"
-                        @input="handleAmbianceVolumeChange"
-                        :style="getInputRangeBackgroundSize(ambianceVolume, sliderVolumeMaxRange)"
-                        :disabled="!store.currentAmbiance.isPlaying"
-                    />
-                </div>
-            </header>
-
-            <div class="audioList">
-                <Audio v-for="audio in store.currentAmbianceAudios" 
-                    :key="audio.id"
-                    :name="audio.name"
-                    :file="audio.file"
-                    :icon="audio.emoji"
-                    :ambianceVolume="ambianceVolume"
-                    />
-              
+        <header>
+            <h2 class="title">{{ambiance.name}} <span>{{ambiance.emoji}}</span></h2>
+            <div class="controls">
+                
+                <PlayPauseButton 
+                :handleClickAction="togglePlayPause"
+                :isContextActive="store.currentAmbiance.isPlaying"
+                :title="ambiance.name" />
+                <input
+                    type="range"
+                    min="0"
+                    :max="sliderVolumeMaxRange"
+                    step="0.01"
+                    :value="ambianceVolume"
+                    @input="handleAmbianceVolumeChange"
+                    :style="getInputRangeBackgroundSize(ambianceVolume, sliderVolumeMaxRange)"
+                    :disabled="!store.currentAmbiance.isPlaying"
+                />
             </div>
+        </header>
+
+        <div class="audioList">
+            <Audio v-for="audio in store.currentAmbianceAudios" 
+                :key="audio.id"
+                :name="audio.name"
+                :file="audio.file"
+                :icon="audio.emoji"
+                :ambianceVolume="ambianceVolume"
+                :isPlaying="store.currentAmbiance.isPlaying"
+                />
         </div>
+    </div>
 </template>
 <style scoped lang="scss">
 .audioList {

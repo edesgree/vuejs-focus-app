@@ -4,16 +4,11 @@ import { ref } from 'vue'; // Import ref for reactive variables
 export const useSoundscapeStore = defineStore('ambiances', () => {
     // State
     const ambiances = ref([]);
-
+    const currentAmbiance = ref(null);
     const currentAmbianceAudios = ref([]);
     const error = ref(null);
     const loading = ref(false);
-    /*
-    const selectedAmbiance = ref(null);
-    const currentPlayingAmbiance = ref(null);
-    const selectedAmbianceIsPlaying = ref(false);
-*/
-    const currentAmbiance = ref(null);
+
     // Getters
     const getAmbiances = async () => {
         loading.value = true;
@@ -53,9 +48,8 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
     const setCurrentAmbiance = async (ambianceId) => {
         const selectedAmbiance = ambiances.value.find((ambiance) => ambiance.id === ambianceId);
         if (selectedAmbiance) {
-
             currentAmbiance.value = { ...selectedAmbiance, isPlaying: false };
-            console.log('setCurrentAmbiance found match', currentAmbiance.value.id);
+            //console.log('setCurrentAmbiance found match', currentAmbiance.value.id);
         } else {
             console.error(`No ambiance found with id ${ambianceId}`);
             return;
@@ -63,7 +57,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         try {
             const audiosFiltered = await getAudiosFiltered(ambianceId);
             currentAmbianceAudios.value = audiosFiltered;
-            console.log('list audios for this ambiance', currentAmbianceAudios.value);
+            //console.log('list audios for this ambiance', currentAmbianceAudios.value);
         } catch (err) {
             console.error('Error filtering audios:', err);
         }
@@ -78,27 +72,20 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
     const setCurrentAmbianceAudios = (audios) => {
         currentAmbianceAudios.value = audios;
     };
-    /*
-        const setCurrentAmbianceIsPlaying = (ambianceId) => {
-            if (currentAmbiance.value.id === ambianceId) {
-                currentAmbiance.value.isPlaying = !currentAmbiance.value.isPlaying;
-            }
-        };
-        */
+
     const getAudiosFiltered = async (ambianceId) => {
         // get arrays of audios corresponding to the ambiance id
         const audiosId = ambiances.value.find((ambiance) => ambiance.id === ambianceId).audiosId;
         loading.value = true;
         if (!audiosId) {
-            console.log('this ambiance has no audios ids');
+            //console.log('this ambiance has no audios ids');
             return []; // Handle undefined audiosId
         }
         try {
             const data = await fetchAudios();
             //filter the complete audio list to get only the audios corresponding to the audiosId list
             const dataFiltered = data.filter((audio) => audiosId.includes(audio.id));
-
-            console.log('getAudiosFiltered', currentAmbianceAudios.value);
+            //console.log('getAudiosFiltered', currentAmbianceAudios.value);
             return dataFiltered;
         }
         catch (err) {

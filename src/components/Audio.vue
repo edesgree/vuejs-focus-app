@@ -1,12 +1,12 @@
 <script setup>
 import { getInputRangeBackgroundSize } from '@/utils/utils';
-import { ref , watch} from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import { useSoundscapeStore } from '../stores';
 import PlayPauseButton from './ui/PlayPauseButton.vue';
 // Define props
 const props = defineProps({
     ambianceVolume:Number,
-
+isPlaying:Boolean,
   icon:String,
   name:String,
   file:String
@@ -14,7 +14,7 @@ const props = defineProps({
 const store = useSoundscapeStore()
 const volume = ref(0.5);
 const sliderVolumeMaxRange = 1;
-const isPlaying = ref(false);
+const isPlaying = ref(props.isPlaying);
 const audioRef = ref(null);
 
 const updateVolume = (event) => {
@@ -62,6 +62,15 @@ watch(() => props.ambianceVolume, (newValue) => {
         audioElement.volume = newValue;
     }
 });
+onMounted(()=>{
+    console.log('audiomounted')
+    if(isPlaying.value){
+        const audioElement = audioRef.value;
+        if(audioElement){
+            audioElement.play();
+        }
+    }
+    })
 </script>
 <template>
     
