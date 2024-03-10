@@ -9,18 +9,12 @@ import Audio from './Audio.vue';
     ambiance: Object
     })
     const store = useSoundscapeStore()
-    console.log('ambiance', store.selectedAmbiance);
+    console.log('ambiance', store.currentAmbiance.id);
     const AmbianceVolume = ref(0.5);
     const sliderVolumeMaxRange = 1;
 
     const togglePlayPause = () => {
-        if (stpre.currentAmbiance.id === ambianceId) {
-            store.setCurrentAmbianceIsPlaying(false);
-        } else {
-            
-            store.setCurrentAmbianceIsPlaying(true);
-        }
-        console.log(`current playing ambiance ${currentAmbiance.id} is ${currentAmbiance.false}`);
+        store.setCurrentAmbianceIsPlaying();
     };
     const handleAmbianceVolumeChange = (e) => {
         setAmbianceVolume(e.target.value);
@@ -29,7 +23,7 @@ import Audio from './Audio.vue';
 
     
  
-    console.log('store.currentAmbianceAudios',store.currentAmbianceAudios)
+    console.log('store.currentAmbianceAudios',store.currentAmbianceAudios.value)
 </script>
 <template>
     <div class="ambiance">
@@ -40,7 +34,7 @@ import Audio from './Audio.vue';
                     
                     <PlayPauseButton 
                     :handleClickAction="togglePlayPause"
-                    :initialDisabled="isAmbiancePlaying"
+                    :initialDisabled="!store.currentAmbiance.isPlaying"
                     :title="name" />
                     <input
                         type="range"
@@ -50,14 +44,14 @@ import Audio from './Audio.vue';
                         :value="AmbianceVolume"
                         :onChange="handleAmbianceVolumeChange"
                         :style="getInputRangeBackgroundSize(AmbianceVolume, sliderVolumeMaxRange)"
-                        :disabled="!isAmbiancePlaying"
+                        :disabled="!store.currentAmbiance.isPlaying"
                     />
                 </div>
 
             </header>
 
             <div class="audioList">
-                <Audio v-for="audio in store.selectedAmbianceAudios" 
+                <Audio v-for="audio in store.currentAmbianceAudios" 
                     :key="audio.id"
                     :name="audio.name"
                     :file="audio.file"

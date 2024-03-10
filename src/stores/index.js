@@ -27,7 +27,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
             loading.value = false;
         }
     };
-    const getAudios = async () => {
+    const getAllAudios = async () => {
         loading.value = true;
         try {
             const data = await fetchAudios();
@@ -50,7 +50,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
 
     // Actions
 
-    const setCurrentAmbiance = (ambianceId) => {
+    const setCurrentAmbiance = async (ambianceId) => {
         const selectedAmbiance = ambiances.value.find((ambiance) => ambiance.id === ambianceId);
         if (selectedAmbiance) {
 
@@ -58,12 +58,23 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
             console.log('setCurrentAmbiance found match', currentAmbiance.value.id);
         } else {
             console.error(`No ambiance found with id ${ambianceId}`);
+            return;
+        }
+        try {
+            const audiosFiltered = await getAudiosFiltered(ambianceId);
+            currentAmbianceAudios.value = audiosFiltered;
+            console.log('list audios for this ambiance', currentAmbianceAudios.value);
+        } catch (err) {
+            console.error('Error filtering audios:', err);
         }
 
 
-        setCurrentAmbianceAudios(getAudiosFiltered(ambianceId));
     };
-
+    const setCurrentAmbianceIsPlaying = () => {
+        if (currentAmbiance.value.id) {
+            currentAmbiance.value.isPlaying = !currentAmbiance.value.isPlaying;
+        }
+    };
     const setCurrentAmbianceAudios = (audios) => {
         currentAmbianceAudios.value = audios;
     };
@@ -79,13 +90,15 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         const audiosId = ambiances.value.find((ambiance) => ambiance.id === ambianceId).audiosId;
         loading.value = true;
         if (!audiosId) {
+            console.log('this ambiance has no audios ids');
             return []; // Handle undefined audiosId
         }
         try {
             const data = await fetchAudios();
             //filter the complete audio list to get only the audios corresponding to the audiosId list
             const dataFiltered = data.filter((audio) => audiosId.includes(audio.id));
-            currentAmbianceAudios.value = dataFiltered;
+
+            console.log('getAudiosFiltered', currentAmbianceAudios.value);
             return dataFiltered;
         }
         catch (err) {
@@ -104,11 +117,12 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         loading,
         currentAmbiance,
         getAmbiances,
-        getAudios,
+        getAllAudios,
         getError,
         getLoading,
         getCurrentAmbianceId,
         getCurrentAmbianceIsPlaying,
+        setCurrentAmbianceIsPlaying,
         setCurrentAmbiance,
         getAudiosFiltered
     };
