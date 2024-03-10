@@ -69,7 +69,8 @@ watch(() => props.ambianceVolume, (newValue) => {
 
         <PlayPauseButton 
         :handleClickAction="togglePlay"
-        :initialDisabled="!isPlaying"
+        :initialDisabled="!store.currentAmbiance.isPlaying"
+        :isContextActive="isPlaying"
         :emoji="icon"
         :title="name" />
 

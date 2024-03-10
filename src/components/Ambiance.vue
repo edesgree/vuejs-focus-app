@@ -13,7 +13,8 @@ import Audio from './Audio.vue';
     const sliderVolumeMaxRange = 1;
 
     const togglePlayPause = () => {
-        store.setCurrentAmbianceIsPlaying();
+        store.setCurrentAmbianceIsPlaying(!store.currentAmbiance.isPlaying);
+        console.log(store.currentAmbiance)
     };
     const handleAmbianceVolumeChange = (e) => {
         ambianceVolume.value = e.target.value;
@@ -53,7 +54,6 @@ import Audio from './Audio.vue';
                     :name="audio.name"
                     :file="audio.file"
                     :icon="audio.emoji"
-                    :isAmbiancePlaying="isAmbiancePlaying"
                     :ambianceVolume="ambianceVolume"
                     />
               

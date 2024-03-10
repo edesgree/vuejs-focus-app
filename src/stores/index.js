@@ -70,9 +70,9 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
 
 
     };
-    const setCurrentAmbianceIsPlaying = () => {
+    const setCurrentAmbianceIsPlaying = (isPlaying) => {
         if (currentAmbiance.value.id) {
-            currentAmbiance.value.isPlaying = !currentAmbiance.value.isPlaying;
+            currentAmbiance.value.isPlaying = isPlaying;
         }
     };
     const setCurrentAmbianceAudios = (audios) => {
