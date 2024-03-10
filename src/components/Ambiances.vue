@@ -5,17 +5,14 @@ import Ambiance from './Ambiance.vue';
 const store = useSoundscapeStore();
 // load ambiances
 store.getAmbiances();
-// Define computed property to filter ambiances based on selectedAmbiance
-const filteredAmbiances = computed(() => {
-  if (store.selectedAmbiance) {
-    return store.ambiances.filter((ambiance) => ambiance.id === store.selectedAmbiance);
-  }else{
-    return [];
-  }
-});
+
+
 const handleSelection = (ambiance) => {
-    store.setSelectedAmbiance(ambiance.id)
+    console.log('handleSelection : ',ambiance)
+    store.setCurrentAmbiance(ambiance.id)
     console.log('ambiance.id selected is : ',ambiance.id)
+    console.log('current store ambiance obj',store.currentAmbiance.value)
+    console.log('store.ambiances',store.ambiances)
 }
 </script>
 <template>
@@ -24,7 +21,7 @@ const handleSelection = (ambiance) => {
    
         <nav class="ambiancesList">
             <div v-for="ambiance in store.ambiances" :key="ambiance.id" @click="handleSelection(ambiance)">
-                <button :class="store.getSelectedAmbiance() === ambiance.id ? 'selected' : null">
+                <button :class="store.getCurrentAmbianceId() === ambiance.id ? 'selected' : null">
                     {{ambiance.emoji}}
                 </button>
             </div>
@@ -32,13 +29,10 @@ const handleSelection = (ambiance) => {
         <span v-if="store.loading" class="loading loading-spinner text-primary">...loading</span>
         
          <h1 v-if="store.error" aria-live="assertive">There was an error: {{store.error.message}}</h1>
-    
-        <div v-if="filteredAmbiances">
-            <div v-for="ambiance in filteredAmbiances" :key="ambiance.id">
-              
-                <Ambiance :name="ambiance.name"/>
-            </div>
-        </div>
+        
+         
+            <Ambiance v-if="store.currentAmbiance" :name="store.currentAmbiance.name"/>
+        
     </div>
 </template>
 <style scoped lang="scss">

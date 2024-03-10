@@ -5,12 +5,15 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
     // State
     const ambiances = ref([]);
 
-    const selectedAmbianceAudios = ref(["hello"]);
+    const currentAmbianceAudios = ref([]);
     const error = ref(null);
     const loading = ref(false);
+    /*
     const selectedAmbiance = ref(null);
     const currentPlayingAmbiance = ref(null);
-
+    const selectedAmbianceIsPlaying = ref(false);
+*/
+    const currentAmbiance = ref(null);
     // Getters
     const getAmbiances = async () => {
         loading.value = true;
@@ -28,7 +31,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
         loading.value = true;
         try {
             const data = await fetchAudios();
-            selectedAmbianceAudios.value = data;
+            currentAmbianceAudios.value = data;
             return data;
         }
         catch (err) {
@@ -41,25 +44,36 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
 
     const getError = () => error.value;
     const getLoading = () => loading.value;
-    const getSelectedAmbiance = () => selectedAmbiance.value;
-    const getCurrentPlayingAmbiance = () => currentPlayingAmbiance.value;
+    const getCurrentAmbianceId = () => currentAmbiance.value ? currentAmbiance.value.id : null;
+    const getCurrentAmbianceIsPlaying = () => currentAmbiance.value.isPlaying;
+
 
     // Actions
 
-    const setSelectedAmbiance = (ambianceId) => {
-        selectedAmbiance.value = ambianceId;
-        console.log('selected ambiance : ', ambianceId);
-        setSelectedAmbianceAudios(getAudiosFiltered(ambianceId));
-        console.log('selectedAmbianceAudios', selectedAmbianceAudios.value);
+    const setCurrentAmbiance = (ambianceId) => {
+        const selectedAmbiance = ambiances.value.find((ambiance) => ambiance.id === ambianceId);
+        if (selectedAmbiance) {
+
+            currentAmbiance.value = { ...selectedAmbiance, isPlaying: false };
+            console.log('setCurrentAmbiance found match', currentAmbiance.value.id);
+        } else {
+            console.error(`No ambiance found with id ${ambianceId}`);
+        }
+
+
+        setCurrentAmbianceAudios(getAudiosFiltered(ambianceId));
     };
 
-    const setSelectedAmbianceAudios = (audios) => {
-        selectedAmbianceAudios.value = audios;
+    const setCurrentAmbianceAudios = (audios) => {
+        currentAmbianceAudios.value = audios;
     };
-
-    const setCurrentPlayingAmbiance = (ambianceId) => {
-        currentPlayingAmbiance.value = ambianceId;
-    };
+    /*
+        const setCurrentAmbianceIsPlaying = (ambianceId) => {
+            if (currentAmbiance.value.id === ambianceId) {
+                currentAmbiance.value.isPlaying = !currentAmbiance.value.isPlaying;
+            }
+        };
+        */
     const getAudiosFiltered = async (ambianceId) => {
         // get arrays of audios corresponding to the ambiance id
         const audiosId = ambiances.value.find((ambiance) => ambiance.id === ambianceId).audiosId;
@@ -71,7 +85,7 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
             const data = await fetchAudios();
             //filter the complete audio list to get only the audios corresponding to the audiosId list
             const dataFiltered = data.filter((audio) => audiosId.includes(audio.id));
-            selectedAmbianceAudios.value = dataFiltered;
+            currentAmbianceAudios.value = dataFiltered;
             return dataFiltered;
         }
         catch (err) {
@@ -85,19 +99,17 @@ export const useSoundscapeStore = defineStore('ambiances', () => {
     return {
 
         ambiances,
-        selectedAmbianceAudios,
+        currentAmbianceAudios,
         error,
         loading,
-        selectedAmbiance,
-        currentPlayingAmbiance,
+        currentAmbiance,
         getAmbiances,
         getAudios,
         getError,
         getLoading,
-        getSelectedAmbiance,
-        getCurrentPlayingAmbiance,
-        getAudiosFiltered,
-        setSelectedAmbiance,
-        setCurrentPlayingAmbiance
+        getCurrentAmbianceId,
+        getCurrentAmbianceIsPlaying,
+        setCurrentAmbiance,
+        getAudiosFiltered
     };
 });

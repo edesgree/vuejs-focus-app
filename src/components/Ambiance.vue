@@ -10,33 +10,31 @@ import Audio from './Audio.vue';
     })
     const store = useSoundscapeStore()
     console.log('ambiance', store.selectedAmbiance);
-const AmbianceVolume = ref(0.5);
-const sliderVolumeMaxRange = 1;
+    const AmbianceVolume = ref(0.5);
+    const sliderVolumeMaxRange = 1;
+
     const togglePlayPause = () => {
-        if (currentPlayingAmbiance === ambianceId) {
-            setCurrentPlayingAmbiance(null);
-            setIsAmbiancePlaying(false);
+        if (stpre.currentAmbiance.id === ambianceId) {
+            store.setCurrentAmbianceIsPlaying(false);
         } else {
-            setCurrentPlayingAmbiance(ambianceId);
-            setIsAmbiancePlaying(true);
+            
+            store.setCurrentAmbianceIsPlaying(true);
         }
-        console.log('currentPlayingAmbiance', currentPlayingAmbiance);
+        console.log(`current playing ambiance ${currentAmbiance.id} is ${currentAmbiance.false}`);
     };
     const handleAmbianceVolumeChange = (e) => {
         setAmbianceVolume(e.target.value);
         console.log('ambiance volume', AmbianceVolume);
     };
-    // filter audios to corresponding ambiance (in vuejs)
-    const filteredAudios = computed(() => {
-        console.log('store.selectedAmbiance.audiosId',store.selectedAmbiance)
-        return store.getAudiosFiltered(store.selectedAmbiance.audiosId)
-    });
+
+    
  
-    console.log('store.selectedAmbianceAudios',store.selectedAmbianceAudios)
+    console.log('store.currentAmbianceAudios',store.currentAmbianceAudios)
 </script>
 <template>
     <div class="ambiance">
             <header>
+                ambiance:
                 <h2 class="title">{{name}} <span>{{icon}}</span></h2>
                 <div class="controls">
                     
