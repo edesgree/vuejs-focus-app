@@ -1,17 +1,17 @@
 <script setup>
 import { getInputRangeBackgroundSize } from '@/utils/utils';
-import { ref } from 'vue';
+import { ref , watch} from 'vue';
+import { useSoundscapeStore } from '../stores';
 import PlayPauseButton from './ui/PlayPauseButton.vue';
 // Define props
 const props = defineProps({
-  
-  isAmbiancePlaying: Boolean,
-  ambianceVolume: Number, 
+    ambianceVolume:Number,
+
   icon:String,
   name:String,
   file:String
 });
-
+const store = useSoundscapeStore()
 const volume = ref(0.5);
 const sliderVolumeMaxRange = 1;
 const isPlaying = ref(false);
@@ -20,7 +20,7 @@ const audioRef = ref(null);
 const updateVolume = (event) => {
     const newVolume = parseFloat(event.target.value);
     volume.value = newVolume;
-    // Access the audio element using $refs 
+    // Access the audio element 
     const audioElement = audioRef.value;
     if (audioElement) {
     audioElement.volume = newVolume;
@@ -40,10 +40,32 @@ const togglePlay = () => {
     isPlaying.value = !isPlaying.value
     
 };
+console.log('11',store.currentAmbiance.isPlaying)
+// Watch for changes in currentAmbiance.value.isPlaying and update isPlaying ref
+watch(() => store.currentAmbiance?.isPlaying, (newValue) => {
+    isPlaying.value = newValue;
+    const audioElement = audioRef.value; // Define audioElement inside the watch callback
+
+    if(audioElement){
+        if (isPlaying.value) {
+            audioElement.play();
+        } else {
+            audioElement.pause();
+        }
+    }
+});
+watch(() => props.ambianceVolume, (newValue) => {
+    volume.value = newValue;
+    const audioElement = audioRef.value; // Define audioElement inside the watch callback
+
+    if(audioElement){
+        audioElement.volume = newValue;
+    }
+});
 </script>
 <template>
     
-    <div>
+    <div class="audio">
 
         <PlayPauseButton 
         :handleClickAction="togglePlay"
@@ -79,52 +101,14 @@ const togglePlay = () => {
 audio{
     display: none;
 }
+.audio{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
 .slider {
   margin: .25rem auto;
 }
 
-input[type='range'] {
-  -webkit-appearance: none;
-  background: grey;
-  background-image: linear-gradient(white, white);
-  background-repeat: no-repeat;
-  border-radius: 5px;
-  width: 3rem;
-  height: $heightSlider;
-}
 
-input[type='range']::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 0 2px 0 #555;
-  cursor: pointer;
-  transition: background 0.3s ease-in-out;
-  height: $heightSlider;
-  width: $heightSlider;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-  -webkit-appearance: none;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-}
-
-input[type="range"]:hover::-webkit-slider-thumb {
-  box-shadow: rgba(white, .5) 0px 0px 0px 4px;
-}
-
-input[type="range"]::-webkit-slider-thumb:active {
-  box-shadow: rgba(white, .8) 0px 0px 0px 8px;
-  transition: box-shadow 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, left 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, bottom 350ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-}
-
-//when is disabled
-input[type='range']:disabled {
-
-
-  background-image: linear-gradient(rgba(white, .5), rgba(white, .5));
-  cursor: not-allowed;
-}
 </style>

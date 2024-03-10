@@ -19,7 +19,7 @@ const handleSelection = (ambiance) => {
     <div className="ambiances">
         <h2>Ambiances</h2>
    
-        <nav class="ambiancesList">
+        <nav :class="['ambiancesList',{opened : store.currentAmbiance}]">
             <div v-for="ambiance in store.ambiances" :key="ambiance.id" @click="handleSelection(ambiance)">
                 <button :class="store.getCurrentAmbianceId() === ambiance.id ? 'selected' : null">
                     {{ambiance.emoji}}
@@ -31,7 +31,7 @@ const handleSelection = (ambiance) => {
          <h1 v-if="store.error" aria-live="assertive">There was an error: {{store.error.message}}</h1>
         
          
-            <Ambiance v-if="store.currentAmbiance" :name="store.currentAmbiance.name"/>
+            <Ambiance v-if="store.currentAmbiance" :ambiance="store.currentAmbiance"/>
         
     </div>
 </template>

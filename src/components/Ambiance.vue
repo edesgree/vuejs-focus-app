@@ -5,20 +5,19 @@ import { useSoundscapeStore } from '../stores';
 import PlayPauseButton from './ui/PlayPauseButton.vue';
 import Audio from './Audio.vue';
     defineProps({
-    name: String,
-    ambiance: Object
+        ambiance: Object
     })
     const store = useSoundscapeStore()
     console.log('ambiance', store.currentAmbiance.id);
-    const AmbianceVolume = ref(0.5);
+    const ambianceVolume = ref(0.5);
     const sliderVolumeMaxRange = 1;
 
     const togglePlayPause = () => {
         store.setCurrentAmbianceIsPlaying();
     };
     const handleAmbianceVolumeChange = (e) => {
-        setAmbianceVolume(e.target.value);
-        console.log('ambiance volume', AmbianceVolume);
+        ambianceVolume.value = e.target.value;
+        console.log('ambiance volume', ambianceVolume);
     };
 
     
@@ -28,8 +27,7 @@ import Audio from './Audio.vue';
 <template>
     <div class="ambiance">
             <header>
-                ambiance:
-                <h2 class="title">{{name}} <span>{{icon}}</span></h2>
+                <h2 class="title">{{ambiance.name}} <span>{{ambiance.emoji}}</span></h2>
                 <div class="controls">
                     
                     <PlayPauseButton 
@@ -41,13 +39,12 @@ import Audio from './Audio.vue';
                         min="0"
                         :max="sliderVolumeMaxRange"
                         step="0.01"
-                        :value="AmbianceVolume"
-                        :onChange="handleAmbianceVolumeChange"
-                        :style="getInputRangeBackgroundSize(AmbianceVolume, sliderVolumeMaxRange)"
+                        :value="ambianceVolume"
+                        @input="handleAmbianceVolumeChange"
+                        :style="getInputRangeBackgroundSize(ambianceVolume, sliderVolumeMaxRange)"
                         :disabled="!store.currentAmbiance.isPlaying"
                     />
                 </div>
-
             </header>
 
             <div class="audioList">
@@ -57,7 +54,7 @@ import Audio from './Audio.vue';
                     :file="audio.file"
                     :icon="audio.emoji"
                     :isAmbiancePlaying="isAmbiancePlaying"
-                    :ambianceVolume="AmbianceVolume"
+                    :ambianceVolume="ambianceVolume"
                     />
               
             </div>
