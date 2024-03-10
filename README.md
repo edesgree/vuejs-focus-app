@@ -1,29 +1,42 @@
-# vuejs-focus-app
+# Soundscape app in Vue JS (3)
 
-This template should help get you started developing with Vue 3 in Vite.
+The project is to build an app that can play different sound ambiances. Each ambiance has several audio tracks that can be turned on and off and the volume adjusted. 
+It is bootstraped with Vite.js.
 
-## Recommended IDE Setup
+🔗 **Live preview:** [here](https://lovely-nasturtium-31d13d.netlify.app/)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+### Screenshot
 
-## Customize configuration
+![screenshot](./screenshot.jpg)
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+## Built with
 
-## Project Setup
+### Technologies
 
-```sh
-npm install
-```
+- HTML
+- CSS
+- Vue JS
+- Pinia for state management
 
-### Compile and Hot-Reload for Development
+### Tools
 
-```sh
-npm run dev
-```
+- Vite
+- mirageJS for server mockup
 
-### Compile and Minify for Production
+## Features
 
-```sh
-npm run build
-```
+- Use of pinia to store ambiances states
+- API calls to get audios and ambiances data
+- Choice of different audio ambiances
+- Audios tracks selectable
+
+## What I learned
+
+- Better knowledge of **Vue JS**.(Pinia)
+- mirageJS
+
+## Author
+
+👤 **Edouard Desgrée**
+
+- GitHub: [edesgree](https://github.com/edesgree)
